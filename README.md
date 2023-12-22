@@ -1,6 +1,6 @@
 # Laravel Json Localization Manager
 
-This is a package to manage json strings for the new Laravel 5.4 Localization Translation Strings As Keys.
+This is a package to manage json strings for Laravel 5.4 and higher Localization Translation Strings As Keys With MySQL.
 [Using Translation Strings As Keys][6ea2d96e]
 
   [6ea2d96e]: https://laravel.com/docs/5.4/localization#using-translation-strings-as-keys "Using Translation Strings As Keys"

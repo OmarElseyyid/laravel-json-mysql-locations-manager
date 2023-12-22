@@ -20,12 +20,12 @@ class HomeController extends Controller
 
     public function index()
     {
-        try {
-            $fields = \DB::getSchemaBuilder()->getColumnListing('strings');
-        } catch (\Illuminate\Database\QueryException $e) {
-            Artisan::call('elseyyid:location:install');
-            $fields = \DB::getSchemaBuilder()->getColumnListing('strings');
-        }
+        if (Schema::hasTable('strings')) {
+			$fields = \DB::getSchemaBuilder()->getColumnListing('strings');
+		} else {
+			Artisan::call('elseyyid:location:install');
+			$fields = \DB::getSchemaBuilder()->getColumnListing('strings');
+		}
         $exceptions = ['en','code','created_at','updated_at'];
         $filtered = collect($fields)->filter(function ($value, $key) use($exceptions){
             if (!in_array($value,$exceptions) ) {

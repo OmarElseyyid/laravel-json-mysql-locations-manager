@@ -6,7 +6,7 @@ use \Elseyyid\LaravelJsonLocationsManager\Models\Strings;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Support\Facades\Artisan;
 use Elseyyid\LaravelJsonLocationsManager\Requests\SearchFormRequest;
 use Elseyyid\LaravelJsonLocationsManager\Requests\NewStringFormRequest;
 use Elseyyid\LaravelJsonLocationsManager\Requests\NewLangFormRequest;
@@ -20,7 +20,12 @@ class HomeController extends Controller
 
     public function index()
     {
-        $fields = \DB::getSchemaBuilder()->getColumnListing('strings');
+        try {
+            $fields = \DB::getSchemaBuilder()->getColumnListing('strings');
+        } catch (\Illuminate\Database\QueryException $e) {
+            Artisan::call('elseyyid:location:install');
+            $fields = \DB::getSchemaBuilder()->getColumnListing('strings');
+        }
         $exceptions = ['en','code','created_at','updated_at'];
         $filtered = collect($fields)->filter(function ($value, $key) use($exceptions){
             if (!in_array($value,$exceptions) ) {

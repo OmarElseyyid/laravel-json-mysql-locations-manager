@@ -9,6 +9,7 @@ use Illuminate\Filesystem\Filesystem;
 use Elseyyid\LaravelJsonLocationsManager\Models\Strings;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Process;
 
 class InstallCommand extends Command
 {
@@ -168,23 +169,47 @@ class InstallCommand extends Command
             $this->backupTable();
             Schema::dropIfExists('strings');
         }
-        Schema::create('strings', function (Blueprint $table) {
-            $table->increments('code')->unsigned();
-            $table->text('en')->unique();
-            $table->text('ar')->nullable();
-            $table->text('da')->nullable();
-            $table->text('de')->nullable();
-            $table->text('el')->nullable();
-            $table->text('es')->nullable();
-            $table->text('fr')->nullable();
-            $table->text('id')->nullable();
-            $table->text('it')->nullable();
-            $table->text('nl')->nullable();
-            $table->text('pt_BR')->nullable();
-            $table->text('sv')->nullable();
-            $table->text('th')->nullable();
-            $table->timestamps();
-        });
+        try {
+            Schema::create('strings', function (Blueprint $table) {
+                $table->increments('code')->unsigned();
+                $table->text('en')->unique();
+                $table->text('ar')->nullable();
+                $table->text('da')->nullable();
+                $table->text('de')->nullable();
+                $table->text('el')->nullable();
+                $table->text('es')->nullable();
+                $table->text('fr')->nullable();
+                $table->text('id')->nullable();
+                $table->text('it')->nullable();
+                $table->text('nl')->nullable();
+                $table->text('pt_BR')->nullable();
+                $table->text('sv')->nullable();
+                $table->text('th')->nullable();
+                $table->timestamps();
+            });
+        } catch (\Illuminate\Database\QueryException $e) {
+            if (Schema::hasTable('strings')) {
+                $this->backupTable();
+                Schema::dropIfExists('strings');
+            }
+            Schema::create('strings', function (Blueprint $table) {
+                $table->increments('code')->unsigned();
+                $table->text('en')->nullable();
+                $table->text('ar')->nullable();
+                $table->text('da')->nullable();
+                $table->text('de')->nullable();
+                $table->text('el')->nullable();
+                $table->text('es')->nullable();
+                $table->text('fr')->nullable();
+                $table->text('id')->nullable();
+                $table->text('it')->nullable();
+                $table->text('nl')->nullable();
+                $table->text('pt_BR')->nullable();
+                $table->text('sv')->nullable();
+                $table->text('th')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     public function backupTable()
@@ -202,8 +227,12 @@ class InstallCommand extends Command
         . " --host=" . config('database.connections.mysql.host') . " "
         . config('database.connections.mysql.database') . " > " . $backupPath . $backupFileName
         . " 2> /dev/null";
- 
-        exec($command);
+
+        try {
+            exec($command);
+        } catch (\Throwable $th) {
+            Process::run($command);
+        }
 
         $this->info("Backup created: {$backupPath}{$backupFileName}");
         $this->info('');

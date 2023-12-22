@@ -33,8 +33,8 @@ class InstallCommand extends Command
     */
     public function __construct(Filesystem $filesystem)
     {
-    parent::__construct();
-    $this->files = $filesystem;
+        parent::__construct();
+        $this->files = $filesystem;
     }
 
     /**
@@ -194,17 +194,51 @@ class InstallCommand extends Command
     
         if (!is_dir($backupPath)) {
             mkdir($backupPath, 0755, true);
-        }
-    
-        Artisan::call('db:dump', [
-            '--database' => 'locations',
-            '--table' => 'strings',
-            '--path' => $backupPath,
-            '--filename' => $backupFileName,
-        ]);
-    
+        }    
+
+        $command = "mysqldump --user="
+        . config('database.connections.mysql.username')
+        . " --password=" . config('database.connections.mysql.password')
+        . " --host=" . config('database.connections.mysql.host') . " "
+        . config('database.connections.mysql.database') . " > " . $backupPath . $backupFileName
+        . " 2> /dev/null";
+ 
+        exec($command);
+
         $this->info("Backup created: {$backupPath}{$backupFileName}");
         $this->info('');
+
+
+        $files = $this->getBackupFiles();
+        $maximumFiles = 3;
+
+        if (count($files) > $maximumFiles) {
+            $sliced = array_slice($files, 0, count($files) - $maximumFiles);
+            collect($sliced)->each(function ($file) {
+                if ($file != '.') {
+                    unlink($file);
+                }
+            });
+        }
+    }
+
+    public static function getBackupFiles(): array
+    {
+        $backupFolder = storage_path('backups');
+        if (!file_exists($backupFolder)) {
+            mkdir($backupFolder, 0775, true);
+            return [];
+        }
+        $files = array_filter(
+            scandir($backupFolder),
+            function ($item) {
+                return !is_dir($item);
+            }
+        );
+        $files = array_values($files);
+        return array_map(function ($file) use ($backupFolder) {
+            return $backupFolder . '/' . $file;
+        }, $files);
     }
 
     public function isInTable($langs)

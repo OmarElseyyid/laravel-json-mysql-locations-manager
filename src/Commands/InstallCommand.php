@@ -172,19 +172,19 @@ class InstallCommand extends Command
         
         Schema::create('strings', function (Blueprint $table) {
             $table->increments('code')->unsigned();
-            $table->text('en')->nullable();
-            $table->text('ar')->nullable();
-            $table->text('da')->nullable();
-            $table->text('de')->nullable();
-            $table->text('el')->nullable();
-            $table->text('es')->nullable();
-            $table->text('fr')->nullable();
-            $table->text('id')->nullable();
-            $table->text('it')->nullable();
-            $table->text('nl')->nullable();
-            $table->text('pt_BR')->nullable();
-            $table->text('sv')->nullable();
-            $table->text('th')->nullable();
+            $table->text('en')->nullable()->collation('utf8_bin');
+            $table->text('ar')->nullable()->collation('utf8_bin');
+            $table->text('da')->nullable()->collation('utf8_bin');
+            $table->text('de')->nullable()->collation('utf8_bin');
+            $table->text('el')->nullable()->collation('utf8_bin');
+            $table->text('es')->nullable()->collation('utf8_bin');
+            $table->text('fr')->nullable()->collation('utf8_bin');
+            $table->text('id')->nullable()->collation('utf8_bin');
+            $table->text('it')->nullable()->collation('utf8_bin');
+            $table->text('nl')->nullable()->collation('utf8_bin');
+            $table->text('pt_BR')->nullable()->collation('utf8_bin');
+            $table->text('sv')->nullable()->collation('utf8_bin');
+            $table->text('th')->nullable()->collation('utf8_bin');
             $table->timestamps();
         });
        
@@ -254,7 +254,7 @@ class InstallCommand extends Command
         foreach ($langs as $key => $value) {
             if (! in_array( $value, $fields )) {
                 Schema::table('strings', function (Blueprint $table) use($value){
-                    $table->text($value)->nullable();
+                    $table->text($value)->nullable()->collation('utf8_bin');
                 });
             }
         }

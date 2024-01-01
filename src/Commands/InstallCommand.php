@@ -169,47 +169,25 @@ class InstallCommand extends Command
             $this->backupTable();
             Schema::dropIfExists('strings');
         }
-        try {
-            Schema::create('strings', function (Blueprint $table) {
-                $table->increments('code')->unsigned();
-                $table->text('en')->unique();
-                $table->text('ar')->nullable();
-                $table->text('da')->nullable();
-                $table->text('de')->nullable();
-                $table->text('el')->nullable();
-                $table->text('es')->nullable();
-                $table->text('fr')->nullable();
-                $table->text('id')->nullable();
-                $table->text('it')->nullable();
-                $table->text('nl')->nullable();
-                $table->text('pt_BR')->nullable();
-                $table->text('sv')->nullable();
-                $table->text('th')->nullable();
-                $table->timestamps();
-            });
-        } catch (\Illuminate\Database\QueryException $e) {
-            if (Schema::hasTable('strings')) {
-                $this->backupTable();
-                Schema::dropIfExists('strings');
-            }
-            Schema::create('strings', function (Blueprint $table) {
-                $table->increments('code')->unsigned();
-                $table->text('en')->nullable();
-                $table->text('ar')->nullable();
-                $table->text('da')->nullable();
-                $table->text('de')->nullable();
-                $table->text('el')->nullable();
-                $table->text('es')->nullable();
-                $table->text('fr')->nullable();
-                $table->text('id')->nullable();
-                $table->text('it')->nullable();
-                $table->text('nl')->nullable();
-                $table->text('pt_BR')->nullable();
-                $table->text('sv')->nullable();
-                $table->text('th')->nullable();
-                $table->timestamps();
-            });
-        }
+        
+        Schema::create('strings', function (Blueprint $table) {
+            $table->increments('code')->unsigned();
+            $table->text('en')->nullable();
+            $table->text('ar')->nullable();
+            $table->text('da')->nullable();
+            $table->text('de')->nullable();
+            $table->text('el')->nullable();
+            $table->text('es')->nullable();
+            $table->text('fr')->nullable();
+            $table->text('id')->nullable();
+            $table->text('it')->nullable();
+            $table->text('nl')->nullable();
+            $table->text('pt_BR')->nullable();
+            $table->text('sv')->nullable();
+            $table->text('th')->nullable();
+            $table->timestamps();
+        });
+       
     }
 
     public function backupTable()

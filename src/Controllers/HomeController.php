@@ -58,7 +58,7 @@ class HomeController extends Controller
     {
         $list = Strings::pluck($lang,'en');
         $json = json_encode_prettify($list);
-        $this->files->put(resource_path('lang/'.$lang.'.json'),$json);
+        $this->files->put(base_path('lang/'.$lang.'.json'),$json);
         return redirect()->back()->with(config('elseyyid-location.message_success_variable'), 'Publicado');
     }
 
@@ -114,7 +114,7 @@ class HomeController extends Controller
         foreach ($columns as $lang) {
             $list = Strings::pluck($lang,'en');
             $json = json_encode_prettify($list);
-            $this->files->put(resource_path('lang/'.$lang.'.json'),$json);
+            $this->files->put(base_path('lang/'.$lang.'.json'),$json);
         }
 
         return redirect()->back()->with(config('elseyyid-location.message_success_variable'), __('All Json Files Published!'));

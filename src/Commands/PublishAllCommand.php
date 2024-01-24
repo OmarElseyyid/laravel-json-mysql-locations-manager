@@ -50,7 +50,7 @@ class PublishAllCommand extends Command
         foreach ($columns as $lang) {
             $list = Strings::pluck($lang,'en');
             $json = json_encode_prettify($list);
-            $this->files->put(resource_path('lang/'.$lang.'.json'),$json);
+            $this->files->put(base_path('lang/'.$lang.'.json'),$json);
             $this->info($lang.'.json Published!');
         }
 
